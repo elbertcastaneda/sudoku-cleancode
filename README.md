@@ -35,3 +35,9 @@ Ok, now let's think about functions trySolveCell and trySolveSudoku. There is a 
 Another solution - "SolvedCellException". But throwing an exception on a case which is not exceptional at all won't make the code readable.
 
 Any other ideas? Think yourself before going to the next page.
+
+---
+
+## Introduce noTableAction flag
+
+What if instead of different flags passed through our functions we will have one module level flag - noTableAction. We can set it to true before each trying to solve sudoku, and set to false after each time we solve some cell. And now we can remove other flags.
