@@ -13,3 +13,9 @@ Now we can see that inside tryFindSimpleSolution high-level things like composin
 ## Extract trySolveSudoku
 
 Also let's separate a cycle of solution tries for the whole table from cells iteration by extracting a function.
+
+---
+
+## Introduce ComplexSudokuError
+
+Ok, another return code can be replaced with an error. If the program cannot do anything with a table, then it should exit with a message that sudoku is too complex. Here we can introduce ComplexSudokuError instead of the return code. Comments are not needed anymore.

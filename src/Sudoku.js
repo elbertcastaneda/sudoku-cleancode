@@ -10,17 +10,14 @@ export const findSimpleSolution = () => {
     result = solution = '';
     initCellsFromInput();
     try {
-        const r = tryFindSimpleSolution();
-        if (r === 0) {
-            setSolution();
-            result = 'We did it ! Congratulations !\n' + 'Simple!\n';
-        }
-        if (r === -2) {
-            result = 'Too complex sudoku';
-        }
+        tryFindSimpleSolution();
+        setSolution();
+        result = 'We did it ! Congratulations !\n' + 'Simple!\n';
     } catch (err) {
         if (err instanceof NoCellVariantsError) {
             result = 'ERROR: input is not a sudoku\n';
+        } else if (err instanceof ComplexSudokuError) {
+            result = 'Too complex sudoku';
         } else {
             throw err;
         }
@@ -133,19 +130,14 @@ const setSolution = () => {
     solution = s;
 }
 
-/**
- * Return 0 - solved
- * ret -1 -- error
- * ret -2 -- cannot resolve
- */
 const tryFindSimpleSolution = () => {
     while (true) {
         if (isSolved()) {
-            return 0;
+            return;
         }
 
         if (trySolveSudoku()) {
-            return -2;
+            throw new ComplexSudokuError();
         }
     }
 }
@@ -202,6 +194,13 @@ export const getResult = () => result;
 export const getSolution = () => solution;
 
 class NoCellVariantsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
+
+class ComplexSudokuError extends Error {
     constructor(message) {
         super(message);
         this.name = this.constructor.name;
