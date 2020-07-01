@@ -19,3 +19,9 @@ Also let's separate a cycle of solution tries for the whole table from cells ite
 ## Introduce ComplexSudokuError
 
 Ok, another return code can be replaced with an error. If the program cannot do anything with a table, then it should exit with a message that sudoku is too complex. Here we can introduce ComplexSudokuError instead of the return code. Comments are not needed anymore.
+
+---
+
+## Missing Rename
+
+Oops, retCode is not a return code anymore. It is some kind of solvedCell now.

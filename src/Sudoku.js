@@ -163,11 +163,10 @@ const trySolveSudoku = () => {
 
 const trySolveCell = (i, j) => {
     let isCellActionPerformed = false;
-    let retCode = 0;
-    retCode = tryFindSolvedCell(i, j);
+    let solvedCell = tryFindSolvedCell(i, j);
 
-    if (retCode > 0) {
-        table[i][j] = retCode;
+    if (solvedCell > 0) {
+        table[i][j] = solvedCell;
         isCellActionPerformed = true;
     }
 
