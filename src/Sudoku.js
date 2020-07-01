@@ -1,7 +1,7 @@
 'use strict';
 
 const ALL_DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-let array = [],
+let table = [],
     result = '',
     solution = '',
     input;
@@ -9,7 +9,7 @@ let array = [],
 export const findSimpleSolution = () => {
     result = solution = '';
     initCellsFromInput();
-    const r = mainCycle();
+    const r = tryFindSimpleSolution();
     if (r === 0) {
         result = 'We did it ! Congratulations !\n' + 'Simple!\n';
     }
@@ -19,19 +19,19 @@ export const findSimpleSolution = () => {
 }
 
 const initCellsFromInput = () => {
-    array = [];
+    table = [];
     const rows = input.split('\n');
 
     for (let i = 0; i < 9; i++) {
-        array[i] = [];
+        table[i] = [];
 
         for (let j = 0; j < 9; j++) {
             const c = rows[i][j];
 
             if (c === ' ') {
-                array[i][j] = 0;
+                table[i][j] = 0;
             } else if (+c <= 9 && +c >= 0) {
-                array[i][j] = +c;
+                table[i][j] = +c;
             } else {
                 throw 'Wrong input format';
             }
@@ -45,7 +45,7 @@ const initCellsFromInput = () => {
  * if more then 1 variant -  return 0 (no solution yet)
  * if no variants -- error, return "-1"
  */
-const checkMe = (str, col) => {
+const trySolveCell = (str, col) => {
     let variants = [...ALL_DIGITS];
     const variantsToExclude = [
         ...getSolvedByRow(col),
@@ -61,7 +61,7 @@ const checkMe = (str, col) => {
     if (variants.length === 0) {
         return -1;
     }
-    return array[str][col] = variants[0];
+    return table[str][col] = variants[0];
 }
 
 const getSolvedBySector = (str, col) => {
@@ -91,8 +91,8 @@ const getSolvedBySector = (str, col) => {
 
     for (let i = mini; i <= maxi; i++) {
         for (let j = minj; j <= maxj; j++) {
-            if (array[i][j] !== 0) {
-                variants.push(array[i][j]);
+            if (table[i][j] !== 0) {
+                variants.push(table[i][j]);
             }
         }
     }
@@ -102,8 +102,8 @@ const getSolvedBySector = (str, col) => {
 const getSolvedByColumn = (str) => {
    let variants = [];
     for (let j = 0; j < 9; j++) {
-        if (array[str][j] !== 0) {
-            variants.push(array[str][j]);
+        if (table[str][j] !== 0) {
+            variants.push(table[str][j]);
         }
     }
     return variants;
@@ -112,18 +112,18 @@ const getSolvedByColumn = (str) => {
 const getSolvedByRow = (col) => {
     let variants = [];
     for (let i = 0; i < 9; i++) {
-        if (array[i][col] !== 0) {
-            variants.push(array[i][col]);
+        if (table[i][col] !== 0) {
+            variants.push(table[i][col]);
         }
     }
     return variants;
 }
 
-const show = () => {
+const setSolution = () => {
     let s = '';
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            s += array[i][j];
+            s += table[i][j];
         }
         s += '\n';
     }
@@ -135,10 +135,10 @@ const show = () => {
  * ret -1 -- error
  * ret -2 -- cannot resolve
  */
-const mainCycle = () => {
+const tryFindSimpleSolution = () => {
     for (; ; ) {
         if (isSolved()) {
-            show();
+            setSolution();
             return 0;
         }
 
@@ -148,8 +148,8 @@ const mainCycle = () => {
 
                 let retCode = 0;
                 let isCellActionPerformed = false;
-                if (array[i][j] === 0) {
-                    retCode = checkMe(i, j);
+                if (table[i][j] === 0) {
+                    retCode = trySolveCell(i, j);
                     if (retCode > 0) {  // cell was solved
                         isCellActionPerformed = true;
                     }
@@ -176,7 +176,7 @@ const isSolved = () => {
     let isSolved = true;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            if (array[i][j] === 0) {
+            if (table[i][j] === 0) {
                 isSolved = false;
             }
         }
