@@ -141,19 +141,11 @@ const tryFindSimpleSolution = () => {
             for (let i = 0; i < 9; i++) {
                 for (let j = 0; j < 9; j++) {
 
-                    let retCode = 0;
                     let isCellActionPerformed = false;
-                    if (table[i][j] === 0) {
-                        retCode = tryFindSolvedCell(i, j);
-                        if (retCode > 0) {
-                            table[i][j] = retCode;
-                            isCellActionPerformed = true;
-                        }
+                    if (table[i][j] === 0 && trySolveCell(i, j)) {
+                        isCellActionPerformed = true;
                     }
-                    if (retCode === -1) {
-                        result = 'ERROR: input is not a sudoku\n';
-                        return -1;
-                    }
+
                     if (isCellActionPerformed) {
                         isNotPerformedAction = false;
                     }
@@ -174,6 +166,19 @@ const tryFindSimpleSolution = () => {
         }
 
     }
+}
+
+const trySolveCell = (i, j) => {
+    let isCellActionPerformed = false;
+    let retCode = 0;
+    retCode = tryFindSolvedCell(i, j);
+
+    if (retCode > 0) {
+        table[i][j] = retCode;
+        isCellActionPerformed = true;
+    }
+
+    return isCellActionPerformed;
 }
 
 const isSolved = () => {
