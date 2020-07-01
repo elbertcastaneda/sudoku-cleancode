@@ -59,7 +59,7 @@ const trySolveCell = (str, col) => {
         return 0;
     }
     if (variants.length === 0) {
-        return -1;
+        throw new NoCellVariantsError();
     }
     return table[str][col] = variants[0];
 }
@@ -142,31 +142,40 @@ const tryFindSimpleSolution = () => {
             return 0;
         }
 
-        let isNotPerformedAction = true;
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
+        try {
+            let isNotPerformedAction = true;
+            for (let i = 0; i < 9; i++) {
+                for (let j = 0; j < 9; j++) {
 
-                let retCode = 0;
-                let isCellActionPerformed = false;
-                if (table[i][j] === 0) {
-                    retCode = trySolveCell(i, j);
-                    if (retCode > 0) {  // cell was solved
-                        isCellActionPerformed = true;
+                    let retCode = 0;
+                    let isCellActionPerformed = false;
+                    if (table[i][j] === 0) {
+                        retCode = trySolveCell(i, j);
+                        if (retCode > 0) {  // cell was solved
+                            isCellActionPerformed = true;
+                        }
                     }
-                }
-                if (retCode === -1) {
-                    result = 'ERROR: input is not a sudoku\n';
-                    return -1;
-                }
-                if (isCellActionPerformed) {
-                    isNotPerformedAction = false;
-                }
+                    if (retCode === -1) {
+                        result = 'ERROR: input is not a sudoku\n';
+                        return -1;
+                    }
+                    if (isCellActionPerformed) {
+                        isNotPerformedAction = false;
+                    }
 
+                }
             }
-        }
 
-        if (isNotPerformedAction) {  // no action for whole table of cells
-            return -2;
+            if (isNotPerformedAction) {  // no action for whole table of cells
+                return -2;
+            }
+        } catch (err) {
+            if (err instanceof NoCellVariantsError) {
+                result = 'ERROR: input is not a sudoku\n';
+                return -1;
+            }
+
+            throw err;
         }
 
     }
@@ -190,3 +199,10 @@ export const setInput = value => {
 
 export const getResult = () => result;
 export const getSolution = () => solution;
+
+class NoCellVariantsError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = this.constructor.name;
+    }
+}
