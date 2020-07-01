@@ -1,6 +1,6 @@
 ## Extract trySolveCell
 
-Before we move forward fixing other return codes and CQS violations, let's improve the code that has just become simpler. Let's extract this block to the function trySolveCell. Yeah, it violates CQS, but we are going to fix it in a few steps. For now, just let this block of code to be a function.
+Before we move forward fixing other return codes and CQS (**C**ommand **Q**uery **S**eparation) violations, let's improve the code that has just become simpler. Let's extract this block to the function trySolveCell. Yeah, it violates CQS, but we are going to fix it in a few steps. For now, just let this block of code to be a function.
 
 ---
 
@@ -25,3 +25,13 @@ Ok, another return code can be replaced with an error. If the program cannot do 
 ## Missing Rename
 
 Oops, retCode is not a return code anymore. It is some kind of solvedCell now.
+
+---
+
+## How to fix the problem?
+
+Ok, now let's think about functions trySolveCell and trySolveSudoku. There is a CQS violation. This functions try to do actions and return boolean in order to inform a caller whether there is performed an action or not. Moreover, these flags do not make the code readable and easy to understand. How can we solve it? The very first idea is - exception. But what exception? We might create two exceptions: "NoCellActionException" and "NoTableActionException". But in this case, stuff with unreadable flags will become even worse.
+
+Another solution - "SolvedCellException". But throwing an exception on a case which is not exceptional at all won't make the code readable.
+
+Any other ideas? Think yourself before going to the next page.
