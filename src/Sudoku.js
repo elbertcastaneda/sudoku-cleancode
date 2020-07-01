@@ -9,12 +9,21 @@ let table = [],
 export const findSimpleSolution = () => {
     result = solution = '';
     initCellsFromInput();
-    const r = tryFindSimpleSolution();
-    if (r === 0) {
-        result = 'We did it ! Congratulations !\n' + 'Simple!\n';
-    }
-    if (r === -2) {
-        result = 'Too complex sudoku';
+    try {
+        const r = tryFindSimpleSolution();
+        if (r === 0) {
+            setSolution();
+            result = 'We did it ! Congratulations !\n' + 'Simple!\n';
+        }
+        if (r === -2) {
+            result = 'Too complex sudoku';
+        }
+    } catch (err) {
+        if (err instanceof NoCellVariantsError) {
+            result = 'ERROR: input is not a sudoku\n';
+        } else {
+            throw err;
+        }
     }
 }
 
@@ -94,7 +103,7 @@ const getSolvedBySector = (str, col) => {
 }
 
 const getSolvedByColumn = (str) => {
-   let variants = [];
+    let variants = [];
     for (let j = 0; j < 9; j++) {
         if (table[str][j] !== 0) {
             variants.push(table[str][j]);
@@ -130,41 +139,29 @@ const setSolution = () => {
  * ret -2 -- cannot resolve
  */
 const tryFindSimpleSolution = () => {
-    for (; ; ) {
+    while (true) {
         if (isSolved()) {
-            setSolution();
             return 0;
         }
 
-        try {
-            let isNotPerformedAction = true;
-            for (let i = 0; i < 9; i++) {
-                for (let j = 0; j < 9; j++) {
+        let isNotPerformedAction = true;
+        for (let i = 0; i < 9; i++) {
+            for (let j = 0; j < 9; j++) {
+                let isCellActionPerformed = false;
 
-                    let isCellActionPerformed = false;
-                    if (table[i][j] === 0 && trySolveCell(i, j)) {
-                        isCellActionPerformed = true;
-                    }
+                if (table[i][j] === 0 && trySolveCell(i, j)) {
+                    isCellActionPerformed = true;
+                }
 
-                    if (isCellActionPerformed) {
-                        isNotPerformedAction = false;
-                    }
-
+                if (isCellActionPerformed) {
+                    isNotPerformedAction = false;
                 }
             }
-
-            if (isNotPerformedAction) {  // no action for whole table of cells
-                return -2;
-            }
-        } catch (err) {
-            if (err instanceof NoCellVariantsError) {
-                result = 'ERROR: input is not a sudoku\n';
-                return -1;
-            }
-
-            throw err;
         }
 
+        if (isNotPerformedAction) {  // no action for whole table of cells
+            return -2;
+        }
     }
 }
 
