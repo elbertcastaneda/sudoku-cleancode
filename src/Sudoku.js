@@ -144,25 +144,29 @@ const tryFindSimpleSolution = () => {
             return 0;
         }
 
-        let isNotPerformedAction = true;
-        for (let i = 0; i < 9; i++) {
-            for (let j = 0; j < 9; j++) {
-                let isCellActionPerformed = false;
-
-                if (table[i][j] === 0 && trySolveCell(i, j)) {
-                    isCellActionPerformed = true;
-                }
-
-                if (isCellActionPerformed) {
-                    isNotPerformedAction = false;
-                }
-            }
-        }
-
-        if (isNotPerformedAction) {  // no action for whole table of cells
+        if (trySolveSudoku()) {
             return -2;
         }
     }
+}
+
+const trySolveSudoku = () => {
+    let isNotPerformedAction = true;
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            let isCellActionPerformed = false;
+
+            if (table[i][j] === 0 && trySolveCell(i, j)) {
+                isCellActionPerformed = true;
+            }
+
+            if (isCellActionPerformed) {
+                isNotPerformedAction = false;
+            }
+        }
+    }
+
+    return isNotPerformedAction;
 }
 
 const trySolveCell = (i, j) => {
