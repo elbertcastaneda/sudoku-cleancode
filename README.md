@@ -41,3 +41,18 @@ Any other ideas? Think yourself before going to the next page.
 ## Introduce noTableAction flag
 
 What if instead of different flags passed through our functions we will have one module level flag - noTableAction. We can set it to true before each trying to solve sudoku, and set to false after each time we solve some cell. And now we can remove other flags.
+
+---
+
+## Extract Small functions
+Good job so far.
+
+Now we can go through all the code once again and make it really readable by extracting small functions with explanatory names.
+
+This try-catch block can be a separate function on anther abstraction layer. And BTW, it is a good idea to rename this function according to the name of new function below.
+
+This block just begging to be extracted to a separate function getCellVariants. Also, tiny functions like getSingle, isMany, isEmpty and removeAll can increase readability by covering some low-level details.
+
+The block table[i][j] != 0 is repeating in the code and also should be a low level small function isSolvedCell. Whereas table[i][j] == 0 - should be isNotSolvedCell which is just invert of isSolvedCell.
+
+This block also does a separate thing on a separate abstraction layer, let's extract it to assertActionPerformed.

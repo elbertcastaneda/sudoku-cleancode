@@ -9,7 +9,11 @@ let table = [],
 
 export const findSimpleSolution = () => {
     result = solution = '';
-    initCellsFromInput();
+    initTableCellsFromInput();
+    findSolutionOfTable();
+}
+
+const findSolutionOfTable = () => {
     try {
         tryFindSimpleSolution();
         setSolution();
@@ -25,7 +29,7 @@ export const findSimpleSolution = () => {
     }
 }
 
-const initCellsFromInput = () => {
+const initTableCellsFromInput = () => {
     table = [];
     const rows = input.split('\n');
 
@@ -47,23 +51,34 @@ const initCellsFromInput = () => {
 }
 
 const tryFindSolvedCell = (str, col) => {
+    const variants = getCellVariants(str, col);
+
+    if (isMany(variants)) {
+        return 0;
+    }
+    if (isEmpty(variants)) {
+        throw new NoCellVariantsError();
+    }
+
+    return getSingle(variants);
+}
+
+const getSingle = variants => variants[0];
+const isMany = variants => variants.length > 1;
+const isEmpty = variants => variants.length === 0;
+
+const getCellVariants = (str, col) => {
     let variants = [...ALL_DIGITS];
     const variantsToExclude = [
         ...getSolvedByRow(col),
         ...getSolvedByColumn(str),
         ...getSolvedBySector(str, col)
     ];
-
-    variants = variants.filter(variant => !variantsToExclude.includes(variant));
-
-    if (variants.length > 1) {
-        return 0;
-    }
-    if (variants.length === 0) {
-        throw new NoCellVariantsError();
-    }
-    return variants[0];
+    return removeAll(variants, variantsToExclude);
 }
+
+const isNotIncluded = (array, item) => !array.includes(item);
+const removeAll = (array, removingItems) => array.filter(item => isNotIncluded(removingItems, item));
 
 const getSolvedBySector = (str, col) => {
     let mini, maxi, minj, maxj;
@@ -92,7 +107,7 @@ const getSolvedBySector = (str, col) => {
 
     for (let i = mini; i <= maxi; i++) {
         for (let j = minj; j <= maxj; j++) {
-            if (table[i][j] !== 0) {
+            if (isSolvedCell(i, j)) {
                 variants.push(table[i][j]);
             }
         }
@@ -103,7 +118,7 @@ const getSolvedBySector = (str, col) => {
 const getSolvedByColumn = (str) => {
     let variants = [];
     for (let j = 0; j < 9; j++) {
-        if (table[str][j] !== 0) {
+        if (isSolvedCell(str, j)) {
             variants.push(table[str][j]);
         }
     }
@@ -113,12 +128,15 @@ const getSolvedByColumn = (str) => {
 const getSolvedByRow = (col) => {
     let variants = [];
     for (let i = 0; i < 9; i++) {
-        if (table[i][col] !== 0) {
+        if (isSolvedCell(i, col)) {
             variants.push(table[i][col]);
         }
     }
     return variants;
 }
+
+const isSolvedCell = (str, col) => table[str][col] !== 0;
+const isNotSolvedCell = (str, col) => !isSolvedCell(str, col);
 
 const setSolution = () => {
     let s = '';
@@ -138,9 +156,13 @@ const tryFindSimpleSolution = () => {
         }
 
         trySolveSudoku();
-        if (noTableAction) {
-            throw new ComplexSudokuError();
-        }
+        assertActionPerformed();
+    }
+}
+
+const assertActionPerformed = () => {
+    if (noTableAction) {
+        throw new ComplexSudokuError();
     }
 }
 
@@ -148,7 +170,7 @@ const trySolveSudoku = () => {
     noTableAction = true;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            if (table[i][j] === 0) {
+            if (isNotSolvedCell(i, j)) {
                 trySolveCell(i, j);
             }
         }
@@ -165,15 +187,15 @@ const trySolveCell = (i, j) => {
 }
 
 const isSolved = () => {
-    let isSolved = true;
+    let solved = true;
     for (let i = 0; i < 9; i++) {
         for (let j = 0; j < 9; j++) {
-            if (table[i][j] === 0) {
-                isSolved = false;
+            if (isNotSolvedCell(i, j)) {
+                solved = false;
             }
         }
     }
-    return isSolved;
+    return solved;
 }
 
 export const setInput = value => {
