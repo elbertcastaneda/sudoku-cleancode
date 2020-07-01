@@ -56,3 +56,16 @@ This block just begging to be extracted to a separate function getCellVariants. 
 The block table[i][j] != 0 is repeating in the code and also should be a low level small function isSolvedCell. Whereas table[i][j] == 0 - should be isNotSolvedCell which is just invert of isSolvedCell.
 
 This block also does a separate thing on a separate abstraction layer, let's extract it to assertActionPerformed.
+
+---
+
+## DRY
+We can see in the code very interesting DRY violation: this block
+
+```
+for (int i = 0; i < 9; i++)
+    for (int j = 0; j < 9; j++)
+        ...
+        ...
+```
+is repeated all the time in the code: lines `35-38`, `141-142` and `168-169`.
