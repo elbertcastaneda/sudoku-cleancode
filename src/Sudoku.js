@@ -4,6 +4,7 @@ const ALL_DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 const FIRST_SECTOR_START = 0;
 const MIDDLE_SECTOR_START = 3;
 const LAST_SECTOR_START = 6;
+const MAX_DIGIT = 9;
 
 let table = [],
     result = '',
@@ -36,10 +37,10 @@ const findSolutionOfTable = () => {
 const initTable = () => {
     table = [];
 
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < MAX_DIGIT; i++) {
         table[i] = [];
 
-        for (let j = 0; j < 9; j++) {
+        for (let j = 0; j < MAX_DIGIT; j++) {
             table[i][j] = 0;
         }
     }
@@ -53,7 +54,7 @@ const initTableCellsFromInput = () => {
 }
 
 const mapInputChar = c => {
-    if (+c <= 9 && +c >= 0) {
+    if (+c <= MAX_DIGIT && +c >= 0) {
         return +c;
     } else if (c !== ' ') {
         throw 'Wrong input format';
@@ -127,7 +128,7 @@ const getStartSectorIndex = n => {
 
 const getSolvedByColumn = (str) => {
     let variants = [];
-    for (let j = 0; j < 9; j++) {
+    for (let j = 0; j < MAX_DIGIT; j++) {
         if (isSolvedCell(str, j)) {
             variants.push(table[str][j]);
         }
@@ -137,7 +138,7 @@ const getSolvedByColumn = (str) => {
 
 const getSolvedByRow = (col) => {
     let variants = [];
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < MAX_DIGIT; i++) {
         if (isSolvedCell(i, col)) {
             variants.push(table[i][col]);
         }
