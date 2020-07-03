@@ -103,3 +103,9 @@ Now let's finally do something with this ugly block. There is also a DRY violati
 ## Extract getStartSectorIndex
 
 Now we can extract a function. It's easy.
+
+---
+
+## Readable names
+
+Now let's add good names for our variables. Magic numbers can be readable constants. mini and minj can be rowStart and columnStart.

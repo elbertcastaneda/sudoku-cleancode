@@ -1,6 +1,10 @@
 'use strict';
 
 const ALL_DIGITS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const FIRST_SECTOR_START = 0;
+const MIDDLE_SECTOR_START = 3;
+const LAST_SECTOR_START = 6;
+
 let table = [],
     result = '',
     solution = '',
@@ -99,28 +103,26 @@ const getSolvedBySector = (str, col) => {
 }
 
 const forEachCellInSector = (str, col, action) => {
-    const mini = getStartSectorIndex(str);
-    const minj = getStartSectorIndex(col);
+    const rowStart = getStartSectorIndex(str);
+    const columnStart = getStartSectorIndex(col);
 
-    for (let i = mini; i <= (mini + 2); i++) {
-        for (let j = minj; j <= (minj + 2); j++) {
+    for (let i = rowStart; i <= (rowStart + 2); i++) {
+        for (let j = columnStart; j <= (columnStart + 2); j++) {
             action(i, j);
         }
     }
 }
 
-const getStartSectorIndex = str => {
-    let min;
-
-    if (str <= 2) {
-        min = 0;
-    } else if (str <= 5) {
-        min = 3;
-    } else {
-        min = 6;
+const getStartSectorIndex = n => {
+    if (n <= (MIDDLE_SECTOR_START - 1)) {
+        return FIRST_SECTOR_START;
     }
 
-    return min;
+    if (n <= (LAST_SECTOR_START - 1)) {
+        return MIDDLE_SECTOR_START;
+    }
+
+    return LAST_SECTOR_START;
 }
 
 const getSolvedByColumn = (str) => {
