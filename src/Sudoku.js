@@ -99,28 +99,28 @@ const getSolvedBySector = (str, col) => {
 }
 
 const forEachCellInSector = (str, col, action) => {
-    let mini, minj;
-
-    if (str <= 2) {
-        mini = 0;
-    } else if (str <= 5) {
-        mini = 3;
-    } else {
-        mini = 6;
-    }
-    if (col <= 2) {
-        minj = 0;
-    } else if (col <= 5) {
-        minj = 3;
-    } else {
-        minj = 6;
-    }
+    const mini = getStartSectorIndex(str);
+    const minj = getStartSectorIndex(col);
 
     for (let i = mini; i <= (mini + 2); i++) {
         for (let j = minj; j <= (minj + 2); j++) {
             action(i, j);
         }
     }
+}
+
+const getStartSectorIndex = str => {
+    let min;
+
+    if (str <= 2) {
+        min = 0;
+    } else if (str <= 5) {
+        min = 3;
+    } else {
+        min = 6;
+    }
+
+    return min;
 }
 
 const getSolvedByColumn = (str) => {

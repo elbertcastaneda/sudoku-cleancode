@@ -45,6 +45,7 @@ What if instead of different flags passed through our functions we will have one
 ---
 
 ## Extract Small functions
+
 Good job so far.
 
 Now we can go through all the code once again and make it really readable by extracting small functions with explanatory names.
@@ -60,6 +61,7 @@ This block also does a separate thing on a separate abstraction layer, let's ext
 ---
 
 ## DRY
+
 We can see in the code very interesting DRY violation: this block
 
 ```
@@ -85,6 +87,7 @@ trySolveSudoku function iterates over each row and cell.
 ---
 
 ## Extract forEachCellInSector function
+
 Sector iteration can be extracted to forEachCellInSector function which makes the code more readable.
 
 Seems like this is the last piece of code that has to be fixed. This function collects all solved cells in the sector. In order to do this, we have to know border indexes to iterate for vertical and horizontal dimensions.
@@ -92,4 +95,11 @@ Seems like this is the last piece of code that has to be fixed. This function co
 ---
 
 ## Remove max indexes
+
 Now let's finally do something with this ugly block. There is also a DRY violation. This and this blocks are pretty much the same. But we cannot extract a function because the function cannot return 2 things. Wait a minute, do we actually need maxi and maxj? We can always calculate it by adding 2 to the mini or minj.
+
+---
+
+## Extract getStartSectorIndex
+
+Now we can extract a function. It's easy.
