@@ -69,3 +69,15 @@ for (int i = 0; i < 9; i++)
         ...
 ```
 is repeated all the time in the code: lines `35-38`, `141-142` and `168-169`.
+
+---
+
+## Functional style
+
+In order to fix it we can use functional style and iterate table in a more meaningful way. isSolved function checks whether every cell in every row is solved.
+
+setSolution function reduces rows and cells into a string.
+
+initTableCellsFromInput function maps input characters into a table's digits and initializes two dimensional array table. Let's move initialization and mapping to a separate functions.
+
+trySolveSudoku function iterates over each row and cell.

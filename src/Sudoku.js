@@ -29,24 +29,30 @@ const findSolutionOfTable = () => {
     }
 }
 
-const initTableCellsFromInput = () => {
+const initTable = () => {
     table = [];
-    const rows = input.split('\n');
 
     for (let i = 0; i < 9; i++) {
         table[i] = [];
 
         for (let j = 0; j < 9; j++) {
-            const c = rows[i][j];
-
-            if (c === ' ') {
-                table[i][j] = 0;
-            } else if (+c <= 9 && +c >= 0) {
-                table[i][j] = +c;
-            } else {
-                throw 'Wrong input format';
-            }
+            table[i][j] = 0;
         }
+    }
+}
+
+const initTableCellsFromInput = () => {
+    initTable();
+    const inputRows = input.split('\n');
+
+    table = table.map((row, i) => row.map((cell, j) => mapInputChar(inputRows[i][j])))
+}
+
+const mapInputChar = c => {
+    if (+c <= 9 && +c >= 0) {
+        return +c;
+    } else if (c !== ' ') {
+        throw 'Wrong input format';
     }
 }
 
@@ -139,14 +145,10 @@ const isSolvedCell = (str, col) => table[str][col] !== 0;
 const isNotSolvedCell = (str, col) => !isSolvedCell(str, col);
 
 const setSolution = () => {
-    let s = '';
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            s += table[i][j];
-        }
-        s += '\n';
-    }
-    solution = s;
+    solution = table.reduce((accRows, row) =>
+        `${accRows}${row.reduce((accCells, cell) => `${accCells}${cell}`, '')}\n`,
+        ''
+    );
 }
 
 const tryFindSimpleSolution = () => {
@@ -168,13 +170,11 @@ const assertActionPerformed = () => {
 
 const trySolveSudoku = () => {
     noTableAction = true;
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (isNotSolvedCell(i, j)) {
-                trySolveCell(i, j);
-            }
+    table.forEach((row, i) => row.forEach((cell, j) => {
+        if (isNotSolvedCell(i, j)) {
+            trySolveCell(i, j);
         }
-    }
+    }));
 }
 
 const trySolveCell = (i, j) => {
@@ -186,17 +186,7 @@ const trySolveCell = (i, j) => {
     }
 }
 
-const isSolved = () => {
-    let solved = true;
-    for (let i = 0; i < 9; i++) {
-        for (let j = 0; j < 9; j++) {
-            if (isNotSolvedCell(i, j)) {
-                solved = false;
-            }
-        }
-    }
-    return solved;
-}
+const isSolved = () => table.every((row, i) => row.every((cell, j) => isSolvedCell(i, j)));
 
 export const setInput = value => {
     input = value;
