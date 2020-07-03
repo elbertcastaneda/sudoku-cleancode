@@ -87,8 +87,19 @@ const isNotIncluded = (array, item) => !array.includes(item);
 const removeAll = (array, removingItems) => array.filter(item => isNotIncluded(removingItems, item));
 
 const getSolvedBySector = (str, col) => {
-    let mini, maxi, minj, maxj;
+
     let variants = [];
+    forEachCellInSector(str, col, (i, j) => {
+        if (isSolvedCell(i, j)) {
+            variants.push(table[i][j]);
+        }
+    });
+
+    return variants;
+}
+
+const forEachCellInSector = (str, col, action) => {
+    let mini, maxi, minj, maxj;
 
     if (str <= 2) {
         mini = 0;
@@ -113,12 +124,9 @@ const getSolvedBySector = (str, col) => {
 
     for (let i = mini; i <= maxi; i++) {
         for (let j = minj; j <= maxj; j++) {
-            if (isSolvedCell(i, j)) {
-                variants.push(table[i][j]);
-            }
+            action(i, j);
         }
     }
-    return variants;
 }
 
 const getSolvedByColumn = (str) => {

@@ -81,3 +81,10 @@ setSolution function reduces rows and cells into a string.
 initTableCellsFromInput function maps input characters into a table's digits and initializes two dimensional array table. Let's move initialization and mapping to a separate functions.
 
 trySolveSudoku function iterates over each row and cell.
+
+---
+
+## Extract forEachCellInSector function
+Sector iteration can be extracted to forEachCellInSector function which makes the code more readable.
+
+Seems like this is the last piece of code that has to be fixed. This function collects all solved cells in the sector. In order to do this, we have to know border indexes to iterate for vertical and horizontal dimensions.
