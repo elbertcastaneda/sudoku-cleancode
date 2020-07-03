@@ -88,3 +88,8 @@ trySolveSudoku function iterates over each row and cell.
 Sector iteration can be extracted to forEachCellInSector function which makes the code more readable.
 
 Seems like this is the last piece of code that has to be fixed. This function collects all solved cells in the sector. In order to do this, we have to know border indexes to iterate for vertical and horizontal dimensions.
+
+---
+
+## Remove max indexes
+Now let's finally do something with this ugly block. There is also a DRY violation. This and this blocks are pretty much the same. But we cannot extract a function because the function cannot return 2 things. Wait a minute, do we actually need maxi and maxj? We can always calculate it by adding 2 to the mini or minj.
